@@ -67,7 +67,6 @@ const Profile = ({ user }: Props) => {
       }
       updateUserProfile({ formData, userId: user.id });
     });
-    console.log(formData);
   };
 
   return (
@@ -161,6 +160,7 @@ const Profile = ({ user }: Props) => {
                         <FormLabel>Grade</FormLabel>
                         <FormControl>
                           <GradePicker
+                            editMode={editMode}
                             onChange={(value) => field.onChange(value)}
                             value={field.value}
                           />

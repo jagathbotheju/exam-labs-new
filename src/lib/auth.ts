@@ -40,7 +40,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const provider = token.provider as string;
       session.provider = provider;
 
-      // console.log("session", session.user);
       return session;
     },
     async jwt({ token }) {

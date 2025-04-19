@@ -39,7 +39,6 @@ export const getExamsBySubjectGrade = async ({
     orderBy: desc(exams.createdAt),
   });
 
-  // console.log("exam", exam);
   return exam as ExamExt[];
 };
 
@@ -97,14 +96,16 @@ export const getUserExams = async (userId: string) => {
 export const getUserExamsPagination = async ({
   userId,
   page,
+  grade,
   pageSize = 10,
 }: {
   userId: string;
   page: number;
+  grade: string;
   pageSize?: number;
 }) => {
   const exams = await db.query.userExams.findMany({
-    where: eq(userExams.userId, userId),
+    where: and(eq(userExams.userId, userId), eq(userExams.grade, grade)),
     with: {
       exams: {
         with: {
@@ -178,8 +179,6 @@ export const addExam = async ({
 };
 
 export const deleteExam = async (examId: string) => {
-  console.log("deletingExam....", examId);
-
   try {
     // const deletedExamQuestions = await db
     //   .delete(examQuestions)
@@ -207,7 +206,6 @@ export const deleteExamFromUser = async ({
   examId: string;
   userId: string;
 }) => {
-  console.log("deletingExamFromUser....", examId);
   try {
     const deletedExam = await db
       .delete(userExams)
@@ -273,9 +271,11 @@ export const cancelUserExam = async ({
 export const addExamToUser = async ({
   userId,
   examId,
+  grade,
 }: {
   userId: string;
   examId: string;
+  grade: string;
 }) => {
   try {
     const examExist = await db
@@ -289,6 +289,7 @@ export const addExamToUser = async ({
       .values({
         examId,
         userId,
+        grade,
       })
       .returning();
     if (addedExam.length) {
@@ -301,10 +302,6 @@ export const addExamToUser = async ({
   }
 };
 
-export const completeExamTest = async (marks: number) => {
-  console.log("completeExamTest....", marks);
-};
-
 export const completeExamAction = async ({
   examId,
   subjectId,
@@ -312,6 +309,7 @@ export const completeExamAction = async ({
   completedAt,
   marks,
   duration,
+  grade,
 }: {
   examId: string;
   subjectId: string;
@@ -319,15 +317,8 @@ export const completeExamAction = async ({
   completedAt: string;
   marks: number;
   duration: number;
+  grade: string;
 }) => {
-  console.log("completing exam...");
-  console.log("completing exam");
-  console.log("examId", examId);
-  console.log("subjectId", subjectId);
-  console.log("userId", userId);
-  console.log("completedAt", completedAt);
-  console.log("marks", marks);
-  console.log("duration", duration);
   try {
     const user = (await db
       .select()
@@ -354,7 +345,8 @@ export const completeExamAction = async ({
           eq(questionsMonthHistory.month, date.getUTCMonth() + 1),
           eq(questionsMonthHistory.year, date.getUTCFullYear()),
           eq(questionsMonthHistory.subjectId, subjectId),
-          eq(questionsMonthHistory.userId, userId)
+          eq(questionsMonthHistory.userId, userId),
+          eq(questionsMonthHistory.grade, grade)
         )
       );
     const yearHistoryExist = await db
@@ -365,7 +357,8 @@ export const completeExamAction = async ({
           eq(questionsYearHistory.month, date.getUTCMonth()),
           eq(questionsYearHistory.year, date.getUTCFullYear()),
           eq(questionsYearHistory.subjectId, subjectId),
-          eq(questionsYearHistory.userId, userId)
+          eq(questionsYearHistory.userId, userId),
+          eq(questionsYearHistory.grade, grade)
         )
       );
 
@@ -383,11 +376,11 @@ export const completeExamAction = async ({
             eq(questionsMonthHistory.day, date.getUTCDate()),
             eq(questionsMonthHistory.month, date.getUTCMonth() + 1),
             eq(questionsMonthHistory.year, date.getUTCFullYear()),
-            eq(questionsMonthHistory.subjectId, subjectId)
+            eq(questionsMonthHistory.subjectId, subjectId),
+            eq(questionsMonthHistory.grade, grade)
           )
         )
         .returning();
-      console.log("update monthHistory", monthHistory);
     } else {
       monthHistory = await db
         .insert(questionsMonthHistory)
@@ -396,12 +389,12 @@ export const completeExamAction = async ({
           userId,
           subjectId,
           marks,
+          grade,
           day: date.getUTCDate(),
           month: date.getUTCMonth() + 1,
           year: date.getUTCFullYear(),
         })
         .returning();
-      console.log("insert monthHistory", monthHistory);
     }
 
     // update year history
@@ -418,11 +411,11 @@ export const completeExamAction = async ({
             eq(questionsYearHistory.month, date.getUTCMonth()),
             eq(questionsYearHistory.year, date.getUTCFullYear()),
             eq(questionsYearHistory.subjectId, subjectId),
-            eq(questionsYearHistory.userId, userId)
+            eq(questionsYearHistory.userId, userId),
+            eq(questionsYearHistory.grade, grade)
           )
         )
         .returning();
-      console.log("update yearHistory", monthHistory);
     } else {
       yearHistory = await db
         .insert(questionsYearHistory)
@@ -430,12 +423,12 @@ export const completeExamAction = async ({
           examId,
           userId,
           subjectId,
+          grade,
           marks,
           month: date.getUTCMonth(),
           year: date.getUTCFullYear(),
         })
         .returning();
-      console.log("insert monthHistory", monthHistory);
     }
 
     if (

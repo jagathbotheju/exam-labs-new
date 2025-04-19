@@ -47,7 +47,6 @@ const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
   const router = useRouter();
   const [exam, setExam] = useState<ExamExt | undefined>();
   const [questionExams, setQuestionExams] = useState<ExamExt[] | undefined>();
-  // console.log("questionExams", questionExams);
 
   const { data: users } = useUsers();
   const user = users?.find((user) => user.id === userId);

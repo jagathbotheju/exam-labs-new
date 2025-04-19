@@ -1,11 +1,10 @@
+"use client";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { User } from "@/server/db/schema/users";
 import AuthButton from "./auth/AuthButton";
+import { useCurrentUser } from "@/server/backend/queries/authQueries";
 
-const Navbar = async () => {
-  const session = await auth();
-  const user = session?.user as User;
+const Navbar = () => {
+  const { data: currentUser } = useCurrentUser();
 
   return (
     <div className="border-b-[1.5px] border-b-primary sticky top-0 z-50 dark:bg-slate-900 bg-slate-50">
@@ -21,9 +20,9 @@ const Navbar = async () => {
           </li>
           <li className="flex items-center gap-10">
             <p className="text-4xl font-bold text-primary">
-              {user?.grade ? user.grade : ""}
+              {currentUser?.grade ? currentUser.grade : ""}
             </p>
-            <AuthButton user={user} />
+            <AuthButton user={currentUser} />
           </li>
         </ul>
       </nav>

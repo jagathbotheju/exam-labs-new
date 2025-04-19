@@ -11,7 +11,6 @@ const LoginPage = async ({
   const { callbackUrl } = await searchParams;
   const session = await auth();
   const user = session?.user as User;
-  // console.log("user", user);
 
   if (user && user?.id) redirect("/");
 

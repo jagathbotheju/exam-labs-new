@@ -23,6 +23,7 @@ export const questionsYearHistory = pgTable(
     userId: text("user_id")
       .references(() => users.id)
       .notNull(),
+    grade: text("grade").notNull(),
     month: integer("month").notNull(),
     year: integer("year").notNull(),
     marks: doublePrecision("marks").default(0),
@@ -32,7 +33,13 @@ export const questionsYearHistory = pgTable(
   },
   (table) => [
     primaryKey({
-      columns: [table.month, table.year, table.subjectId, table.userId],
+      columns: [
+        table.month,
+        table.year,
+        table.subjectId,
+        table.userId,
+        table.grade,
+      ],
     }),
   ]
 );

@@ -1,14 +1,9 @@
 "use client";
-// import MyExams from "../exams/MyExams";
-// import StudentSelector from "../student/StudentSelector";
 import { useState } from "react";
-// import _ from "lodash";
 import { User, UserExt } from "@/server/db/schema/users";
 import UserPicker from "../UserPicker";
 import ResultSummary from "./ResultSummary";
 import MyExams from "./MyExams";
-// import ResultSummary from "../student/ResultSummary";
-// import { Loader2 } from "lucide-react";
 
 interface Props {
   admin: User;

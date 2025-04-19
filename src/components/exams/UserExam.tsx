@@ -1,14 +1,8 @@
 "use client";
-// import {
-//   useExamById,
-//   useStudentExam,
-//   useStudentExams,
-// } from "@/server/backend/queries/examQueries";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import ExamQuestionCard from "./ExamQuestionCard";
 import { useMemo, useState } from "react";
-// import { UserResponse } from "@/lib/types";
 import ExamTimer from "./ExamTimer";
 import { Button } from "../ui/button";
 import AppDialog from "../AppDialog";
@@ -18,18 +12,14 @@ import { useAnswerQuestion } from "@/server/backend/mutations/questionMutations"
 import {
   useCancelUserExam,
   useCompleteExamMutation,
-  useCompleteExamTest,
 } from "@/server/backend/mutations/examMutations";
-// import { useUserAnswers } from "@/server/backend/queries/answerQueries";
 import { useQueryClient } from "@tanstack/react-query";
 import { Separator } from "../ui/separator";
-import { differenceInMinutes, format } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 import { UserResponse } from "@/lib/types";
 import { useExamById, useUserExam } from "@/server/backend/queries/examQueries";
 import { useUserAnswers } from "@/server/backend/queries/answerQueries";
 import { useTimeFrameStore } from "@/stores/useTimeFrameStore";
-// import Countdown, { zeroPad } from "react-countdown";
-// import { useReactToPrint } from "react-to-print";
 
 interface Props {
   examId: string;
@@ -40,7 +30,6 @@ const UserExam = ({ examId, completed = false }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
-  // const startTime = useMemo(() => new Date(), []);
   const { examStartTime } = useTimeFrameStore();
 
   const [userResponse, setUserResponse] = useState<UserResponse[]>([]);
@@ -57,7 +46,7 @@ const UserExam = ({ examId, completed = false }: Props) => {
     isPending: completeExamPending,
     isSuccess: completeExamSuccess,
   } = useCompleteExamMutation();
-  const { mutate: completeExamTest } = useCompleteExamTest();
+
   const { data: exam, isPending: isPendingExam } = useExamById(examId);
   const { data: userExam, isLoading: userExamLoading } = useUserExam({
     examId,
@@ -68,7 +57,6 @@ const UserExam = ({ examId, completed = false }: Props) => {
     examId,
     userId: userId,
   });
-  console.log("userAnswers", userAnswers);
 
   const examDurationMin = exam && exam.duration ? exam.duration : 0;
   const examTimerMemo = useMemo(
@@ -81,7 +69,6 @@ const UserExam = ({ examId, completed = false }: Props) => {
       if (answer.questionAnswer === answer.userAnswer) return acc + 1;
       return acc;
     }, 0) ?? 0;
-  console.log("correctAnswers", correctAnswers);
   const marks =
     correctAnswers && exam && exam.examQuestions
       ? (correctAnswers / exam.examQuestions.length) * 100
@@ -93,10 +80,6 @@ const UserExam = ({ examId, completed = false }: Props) => {
     const endTime = new Date();
     const durationMin = differenceInMinutes(endTime, examStartTime);
 
-    console.log("startTime", format(examStartTime, "yyyy-MM-dd HH:mm:ss"));
-    console.log("endTime", format(endTime, "yyyy-MM-dd HH:mm:ss"));
-    console.log("duration", durationMin);
-
     completeExamMut({
       examId,
       subjectId: exam?.subjectId ?? "",
@@ -104,10 +87,8 @@ const UserExam = ({ examId, completed = false }: Props) => {
       marks: marks,
       duration: durationMin,
       completedAt: endTime.toISOString(),
+      grade: exam?.grade ?? "",
     });
-    completeExamTest();
-    console.log("completeExamTestSubmit", durationMin);
-    // // console.log("completing exam onSubmit Start....");
 
     // router.push(
     //   `/user/completed-exam/${examId}?userId=${userId}&userName=${userName}&role=${role}`

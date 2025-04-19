@@ -41,8 +41,6 @@ const ExamPicker = ({ exam, setExam, subjectId, grade }: Props) => {
     return <p className="text-xl font-semibold">No Exams Found!</p>;
   }
 
-  // console.log("examsBySubject", examsBySubject);
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

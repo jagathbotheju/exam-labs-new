@@ -16,11 +16,15 @@ import SubjectPicker from "../SubjectPicker";
 import DeleteExamDialog from "./DeleteExamDialog";
 import { useExamsBySubjectGrade } from "@/server/backend/queries/examQueries";
 import GradePicker from "../GradePicker";
+import { useCurrentUser } from "@/server/backend/queries/authQueries";
 
 const AllExams = () => {
+  const { data: currentUser } = useCurrentUser();
   const router = useRouter();
   const [subjectId, setSubject] = useState("");
-  const [grade, setGrade] = useState("");
+  const [grade, setGrade] = useState(
+    currentUser && currentUser.grade ? currentUser.grade : ""
+  );
 
   // const { data: exams, isPending } = useExams();
   const { data: exams, isPending } = useExamsBySubjectGrade({

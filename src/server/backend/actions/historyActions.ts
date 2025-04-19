@@ -15,12 +15,15 @@ export const getMonthHistoryData = async ({
   userId,
   year,
   month,
+  grade,
 }: {
   subjectId: string;
   userId: string;
   year: number;
   month: number;
+  grade: string;
 }) => {
+  console.log("grade", grade);
   const result = await db
     .select()
     .from(questionsMonthHistory)
@@ -29,7 +32,8 @@ export const getMonthHistoryData = async ({
       and(
         eq(questionsMonthHistory.subjectId, subjectId),
         eq(questionsMonthHistory.userId, userId),
-        eq(questionsMonthHistory.month, month)
+        eq(questionsMonthHistory.month, month),
+        eq(questionsMonthHistory.grade, grade)
       )
     );
 
@@ -73,10 +77,12 @@ export const getYearHistoryData = async ({
   subjectId,
   userId,
   year,
+  grade,
 }: {
   subjectId: string;
   userId: string;
   year: number;
+  grade: string;
 }) => {
   const result = await db
     .select()
@@ -86,7 +92,8 @@ export const getYearHistoryData = async ({
       and(
         eq(questionsYearHistory.year, year),
         eq(questionsYearHistory.subjectId, subjectId),
-        eq(questionsYearHistory.userId, userId)
+        eq(questionsYearHistory.userId, userId),
+        eq(questionsYearHistory.grade, grade)
       )
     );
 

@@ -18,9 +18,10 @@ import { cn } from "@/lib/utils";
 interface Props {
   onChange: (value: string) => void;
   value: string;
+  editMode?: boolean;
 }
 
-const GradePicker = ({ onChange, value }: Props) => {
+const GradePicker = ({ onChange, value, editMode = true }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,6 +29,7 @@ const GradePicker = ({ onChange, value }: Props) => {
       <PopoverTrigger asChild className="dark:bg-slate-900">
         <Button
           variant="outline"
+          disabled={!editMode}
           role="combobox"
           aria-expanded={open}
           className={cn(

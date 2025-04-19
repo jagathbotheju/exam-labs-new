@@ -18,9 +18,6 @@ const ProfilePage = async () => {
     redirect("/auth/login");
   }
 
-  console.log("school", !user.school);
-  console.log("grade", !user.grade);
-
   return (
     <div className="w-full flex flex-col gap-5">
       {(!user.school || !user.grade) && (

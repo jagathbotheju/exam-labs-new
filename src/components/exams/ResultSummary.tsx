@@ -36,18 +36,20 @@ const ResultSummary = ({ user }: Props) => {
   const { data: subjects } = useSubjects();
   const subject = subjects?.find((item) => item.id === subjectId);
 
-  const { data: monthHistoryData, isFetching: monthHistoryFetching } =
+  const { data: monthHistoryData, isLoading: monthHistoryFetching } =
     useMonthHistoryData({
       subjectId,
       userId: user.id,
       month: period.month,
       year: period.year,
+      grade: user.grade as string,
     });
-  const { data: yearHistoryData, isFetching: yearHistoryFetching } =
+  const { data: yearHistoryData, isLoading: yearHistoryFetching } =
     useYearHistoryData({
       subjectId,
       userId: user.id,
       year: period.year,
+      grade: user.grade as string,
     });
 
   useEffect(() => {

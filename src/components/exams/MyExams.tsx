@@ -25,6 +25,7 @@ import AppPagination from "../AppPagination";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { useTimeFrameStore } from "@/stores/useTimeFrameStore";
+import GradePicker from "../GradePicker";
 
 interface Props {
   role?: string;
@@ -36,12 +37,13 @@ const MyExams = ({ user, role = "user" }: Props) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [page, setPage] = useState(1);
+  const [grade, setGrade] = useState<string>(user?.grade as string);
 
   const { data: userExams, isLoading } = useUserExamsPagination({
     userId: user.id,
     page,
+    grade,
   });
-  console.log("userExams", userExams);
 
   const { data: questionsCount } = useUserExamsCount(user.id);
   const { mutate: deleteExamFromUser } = useDeleteExamFromUser();
@@ -86,7 +88,10 @@ const MyExams = ({ user, role = "user" }: Props) => {
   return (
     <Card className="bg-transparent dark:border-primary/40">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">My Exams</CardTitle>
+        <div className="flex justify-between">
+          <CardTitle className="text-2xl font-bold">My Exams</CardTitle>
+          <GradePicker value={grade} onChange={setGrade} />
+        </div>
       </CardHeader>
       <CardContent>
         {userExams?.length ? (

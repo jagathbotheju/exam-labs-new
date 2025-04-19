@@ -4,7 +4,6 @@ import {
   addExamToUser,
   cancelUserExam,
   completeExamAction,
-  completeExamTest,
   deleteExam,
   deleteExamFromUser,
 } from "../actions/examActions";
@@ -34,12 +33,6 @@ export const useAddExam = () => {
   });
 };
 
-export const useCompleteExamTest = () => {
-  return useMutation({
-    mutationFn: () => completeExamTest(200),
-  });
-};
-
 export const useCompleteExamMutation = () => {
   return useMutation({
     mutationFn: ({
@@ -49,6 +42,7 @@ export const useCompleteExamMutation = () => {
       completedAt,
       marks,
       duration,
+      grade,
     }: {
       examId: string;
       subjectId: string;
@@ -56,6 +50,7 @@ export const useCompleteExamMutation = () => {
       completedAt: string;
       marks: number;
       duration: number;
+      grade: string;
     }) => {
       return completeExamAction({
         examId,
@@ -64,6 +59,7 @@ export const useCompleteExamMutation = () => {
         completedAt,
         marks,
         duration,
+        grade,
       });
     },
   });
@@ -92,41 +88,6 @@ export const useDeleteExam = () => {
   });
 };
 
-export const useCompleteExam = () => {
-  console.log("completing exam mut...");
-  return useMutation({
-    mutationFn: ({
-      examId,
-      subjectId,
-      userId,
-      completedAt,
-      marks,
-      duration,
-    }: {
-      examId: string;
-      subjectId: string;
-      userId: string;
-      completedAt: string;
-      marks: number;
-      duration: number;
-    }) =>
-      completeExamAction({
-        examId,
-        subjectId,
-        userId,
-        completedAt,
-        marks,
-        duration,
-      }),
-    onError: (err) => {
-      console.log("error mut", err.message);
-    },
-    onSuccess: (res) => {
-      console.log(res);
-    },
-  });
-};
-
 export const useCancelUserExam = () => {
   return useMutation({
     mutationFn: ({ examId, userId }: { examId: string; userId: string }) =>
@@ -151,8 +112,15 @@ export const useAddExamToUser = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: ({ examId, userId }: { examId: string; userId: string }) =>
-      addExamToUser({ examId, userId }),
+    mutationFn: ({
+      examId,
+      userId,
+      grade,
+    }: {
+      examId: string;
+      userId: string;
+      grade: string;
+    }) => addExamToUser({ examId, userId, grade }),
     onSuccess: (res) => {
       if (res.success) {
         // queryClient.invalidateQueries({ queryKey: ["questions-by-subject"] });
@@ -171,7 +139,6 @@ export const useAddExamToUser = () => {
 
 export const useDeleteExamFromUser = () => {
   const queryClient = useQueryClient();
-  console.log("mutate-deleteExamFromUser....");
 
   return useMutation({
     mutationFn: ({ examId, userId }: { examId: string; userId: string }) =>

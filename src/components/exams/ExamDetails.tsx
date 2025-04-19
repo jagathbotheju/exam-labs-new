@@ -40,6 +40,7 @@ const ExamDetails = ({ examId, user }: Props) => {
       addExamToUser({
         userId: selectedUser.id,
         examId,
+        grade: user.grade as string,
       });
     }
   };

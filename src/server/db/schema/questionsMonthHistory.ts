@@ -23,6 +23,7 @@ export const questionsMonthHistory = pgTable(
         onDelete: "cascade",
       })
       .notNull(),
+    grade: text("grade").notNull(),
     marks: doublePrecision("marks").default(0),
     day: integer("day").notNull().notNull(),
     month: integer("month").notNull(),
@@ -31,19 +32,18 @@ export const questionsMonthHistory = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => {
-    return {
-      pk: primaryKey({
-        columns: [
-          table.day,
-          table.month,
-          table.year,
-          table.subjectId,
-          table.userId,
-        ],
-      }),
-    };
-  }
+  (table) => [
+    primaryKey({
+      columns: [
+        table.day,
+        table.month,
+        table.year,
+        table.subjectId,
+        table.userId,
+        table.grade,
+      ],
+    }),
+  ]
 );
 
 export type QuestionsMonthHistory = InferSelectModel<

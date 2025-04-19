@@ -1,5 +1,6 @@
 "use server";
-import { signIn } from "@/lib/auth";
+import { auth, signIn } from "@/lib/auth";
+import { UserExt } from "@/server/db/schema/users";
 import { revalidatePath } from "next/cache";
 
 export const socialSignIn = async ({
@@ -12,4 +13,10 @@ export const socialSignIn = async ({
   await signIn(social, { redirectTo: callback }).then(() => {
     revalidatePath("/");
   });
+};
+
+export const getCurrentUser = async () => {
+  const session = await auth();
+  const user = session?.user as UserExt;
+  return user;
 };

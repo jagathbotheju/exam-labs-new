@@ -21,6 +21,7 @@ export const userExams = pgTable(
       .notNull(),
     marks: doublePrecision("marks").default(0),
     duration: integer("duration").default(0),
+    grade: text("grade"),
     completedAt: timestamp("completed_at", { mode: "string" }),
   },
   (table) => [primaryKey({ columns: [table.userId, table.examId] })]

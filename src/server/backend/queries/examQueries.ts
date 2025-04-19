@@ -45,14 +45,16 @@ export const useExamsBySubjectGrade = ({
 export const useUserExamsPagination = ({
   userId,
   page,
+  grade,
 }: {
   userId: string;
   page: number;
   pageSize?: number;
+  grade: string;
 }) => {
   return useQuery({
-    queryKey: ["student-exams", userId, page],
-    queryFn: () => getUserExamsPagination({ userId, page }),
+    queryKey: ["student-exams", userId, page, grade],
+    queryFn: () => getUserExamsPagination({ userId, page, grade }),
   });
 };
 

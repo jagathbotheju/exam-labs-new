@@ -15,7 +15,7 @@ import { User } from "@/server/db/schema/users";
 import ThemeSwitch from "../ThemeSwitch";
 
 interface Props {
-  user: User;
+  user: User | undefined;
 }
 
 const AuthButton = ({ user }: Props) => {

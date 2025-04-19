@@ -17,15 +17,18 @@ export const useMonthHistoryData = ({
   userId,
   year,
   month,
+  grade,
 }: {
   subjectId: string;
   userId: string;
   year: number;
   month: number;
+  grade: string;
 }) => {
   return useQuery({
-    queryKey: ["month-history-data", subjectId, userId, year, month],
-    queryFn: () => getMonthHistoryData({ subjectId, userId, year, month }),
+    queryKey: ["month-history-data", subjectId, userId, year, month, grade],
+    queryFn: () =>
+      getMonthHistoryData({ subjectId, userId, year, month, grade }),
   });
 };
 
@@ -33,13 +36,15 @@ export const useYearHistoryData = ({
   subjectId,
   userId,
   year,
+  grade,
 }: {
   subjectId: string;
   userId: string;
   year: number;
+  grade: string;
 }) => {
   return useQuery({
-    queryKey: ["year-history-data", subjectId, userId, year],
-    queryFn: () => getYearHistoryData({ subjectId, userId, year }),
+    queryKey: ["year-history-data", subjectId, userId, year, grade],
+    queryFn: () => getYearHistoryData({ subjectId, userId, year, grade }),
   });
 };
