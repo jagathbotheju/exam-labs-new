@@ -18,5 +18,5 @@ export const socialSignIn = async ({
 export const getCurrentUser = async () => {
   const session = await auth();
   const user = session?.user as UserExt;
-  return user ? user : {};
+  return user ? user : ({} as UserExt);
 };
