@@ -124,7 +124,7 @@ export const getUserExamsPagination = async ({
         },
       },
     },
-    // orderBy: [desc(userExams.createdAt)],
+    orderBy: [desc(userExams.completedAt)],
     limit: pageSize,
     offset: (page - 1) * pageSize,
   });

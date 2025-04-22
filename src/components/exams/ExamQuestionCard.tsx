@@ -80,8 +80,8 @@ const ExamQuestionCard = ({
                       <Image
                         alt="question image"
                         src={question.image}
-                        width={200}
-                        height={200}
+                        width={450}
+                        height={450}
                         className="object-cover z-10"
                       />
                     )}
