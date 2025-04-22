@@ -4,6 +4,7 @@ import {
   getExams,
   getExamsBySubjectGrade,
   getUserExam,
+  getUserExamsByGrade,
   getUserExamsCount,
   getUserExamsPagination,
 } from "../actions/examActions";
@@ -35,13 +36,6 @@ export const useExamsBySubjectGrade = ({
   });
 };
 
-// export const useStudentExams = (studentId: string) => {
-//   return useQuery({
-//     queryKey: ["student-exams", studentId],
-//     queryFn: () => getStudentExams(studentId),
-//   });
-// };
-
 export const useUserExamsPagination = ({
   userId,
   page,
@@ -55,6 +49,19 @@ export const useUserExamsPagination = ({
   return useQuery({
     queryKey: ["student-exams", userId, page, grade],
     queryFn: () => getUserExamsPagination({ userId, page, grade }),
+  });
+};
+
+export const useUserExamsByGrade = ({
+  userId,
+  grade,
+}: {
+  userId: string;
+  grade: string;
+}) => {
+  return useQuery({
+    queryKey: ["user-exams-by-grade", userId, grade],
+    queryFn: () => getUserExamsByGrade({ userId, grade }),
   });
 };
 

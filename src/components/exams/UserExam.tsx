@@ -84,7 +84,7 @@ const UserExam = ({ examId, completed = false }: Props) => {
       examId,
       subjectId: exam?.subjectId ?? "",
       userId: userId,
-      marks: marks,
+      marks: Math.floor(marks),
       duration: durationMin,
       completedAt: endTime.toISOString(),
       grade: exam?.grade ?? "",

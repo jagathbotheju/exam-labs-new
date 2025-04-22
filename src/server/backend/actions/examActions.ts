@@ -71,9 +71,15 @@ export const getExams = async () => {
   return allExams as ExamExt[];
 };
 
-export const getUserExams = async (userId: string) => {
+export const getUserExamsByGrade = async ({
+  userId,
+  grade,
+}: {
+  userId: string;
+  grade: string;
+}) => {
   const exams = await db.query.userExams.findMany({
-    where: eq(userExams.userId, userId),
+    where: and(eq(userExams.userId, userId), eq(userExams.grade, grade)),
     with: {
       exams: {
         with: {
@@ -87,7 +93,6 @@ export const getUserExams = async (userId: string) => {
         },
       },
     },
-    // orderBy: [desc(userExams.createdAt)],
   });
 
   return exams as UserExamExt[];
