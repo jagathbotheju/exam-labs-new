@@ -79,7 +79,7 @@ const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
   }, [exams, question.examQuestions]);
 
   return (
-    <Card className="dark:bg-slate-900 bg-slate-50">
+    <Card className="dark:bg-slate-900 bg-slate-50 hover:drop-shadow-xl">
       <CardContent className="p-0">
         <div className="flex flex-col hover:drop-shadow-xl p-2">
           <div className="flex justify-between">
@@ -93,10 +93,10 @@ const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
 
           <div className="flex justify-between h-full">
             <div className="flex gap-2 items-center h-full w-full">
-              <div className="px-4 h-auto font-bold rounded-tl-lg rounded-bl-lg flex items-center justify-center">
+              {/* <div className="px-4 h-auto font-bold rounded-tl-lg rounded-bl-lg flex items-center justify-center">
                 {index}
-              </div>
-              <div className="flex flex-col gap-1 py-1">
+              </div> */}
+              <div className="flex flex-col gap-1 py-1 ml-5">
                 <div className="flex-1 h-full">
                   <div className="line-clamp-2 tracking-wide font-sinhala">
                     {parse(question.body)}

@@ -12,7 +12,6 @@ export const userAnswers = pgTable(
       .notNull(),
     examId: text("exam_id")
       .references(() => exams.id)
-      .notNull()
       .notNull(),
     questionId: text("question_id")
       .references(() => questions.id)

@@ -139,8 +139,15 @@ export const removeQuestionFromExam = async ({
 
 export const deleteQuestion = async (questionId: string) => {
   const deletedQuestion = await db
-    .delete(questions)
-    .where(eq(questions.id, questionId));
+    .delete(examQuestions)
+    .where(eq(examQuestions.questionId, questionId))
+    .returning()
+    .then(() => {
+      return db
+        .delete(questions)
+        .where(eq(questions.id, questionId))
+        .returning();
+    });
 
   if (deletedQuestion) {
     return { success: "Question deleted Successfully" };

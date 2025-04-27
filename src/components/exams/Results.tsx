@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { User, UserExt } from "@/server/db/schema/users";
 import UserPicker from "../UserPicker";
-import ResultSummary from "./ResultSummary";
 import MyExams from "./MyExams";
+import ResultSummaryLineChart from "./ResultSummaryLineChart";
 
 interface Props {
   admin: User;
@@ -20,7 +20,7 @@ const Results = ({ admin }: Props) => {
       </div>
 
       <div className="mt-8">
-        {selectedUser && <ResultSummary user={selectedUser} />}
+        {selectedUser && <ResultSummaryLineChart user={selectedUser} />}
       </div>
 
       <div className="mt-8">

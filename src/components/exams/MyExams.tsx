@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/server/db/schema/users";
 import {
-  useUserExamsByGrade,
+  // useUserExamsByGrade,
   useUserExamsCount,
   useUserExamsPagination,
 } from "@/server/backend/queries/examQueries";
@@ -39,11 +39,10 @@ const MyExams = ({ user, role = "user" }: Props) => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [grade, setGrade] = useState<string>(user?.grade as string);
-  const { data: allUserExams } = useUserExamsByGrade({
-    userId: user.id,
-    grade: user.grade as string,
-  });
-  console.log("userExams", allUserExams);
+  // const { data: allUserExams } = useUserExamsByGrade({
+  //   userId: user.id,
+  //   grade: user.grade as string,
+  // });
 
   const { data: userExams, isLoading } = useUserExamsPagination({
     userId: user.id,

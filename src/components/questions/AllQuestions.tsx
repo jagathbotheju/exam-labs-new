@@ -94,7 +94,7 @@ const AllQuestions = () => {
                 <QuestionCard
                   key={question.id}
                   question={question}
-                  index={page + index}
+                  index={index}
                   subjectId={subjectId}
                   grade={grade}
                 />

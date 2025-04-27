@@ -10,6 +10,59 @@ import { QuestionsMonthHistory } from "@/server/db/schema/questionsMonthHistory"
 import { and, asc, eq } from "drizzle-orm";
 import _ from "lodash";
 
+export const getMonthHistoryDataForSubjects = async ({
+  subjectId,
+  userId,
+  year,
+  month,
+  grade,
+}: {
+  subjectId: string;
+  userId: string;
+  year: number;
+  month: number;
+  grade: string;
+}) => {
+  const result = await db.query.questionsMonthHistory.findMany({
+    with: {
+      subjects: true,
+    },
+    where: and(
+      eq(questionsMonthHistory.subjectId, subjectId),
+      eq(questionsMonthHistory.userId, userId),
+      eq(questionsMonthHistory.month, month),
+      eq(questionsMonthHistory.grade, grade)
+    ),
+    orderBy: asc(questionsMonthHistory.day),
+  });
+
+  if (!_.isEmpty(result)) {
+    const history: HistoryData[] = [];
+    const daysInMonth = getDaysInMonth(new Date(year, month));
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      let marks = 0;
+
+      const day = result.find((item) => item.day === i);
+      if (day) {
+        marks = day.marks || 0;
+      }
+
+      history.push({
+        marks,
+        year,
+        month,
+        day: i,
+        subjectId,
+      });
+    }
+
+    return history;
+  }
+
+  return [];
+};
+
 export const getMonthHistoryData = async ({
   subjectId,
   userId,
@@ -23,29 +76,18 @@ export const getMonthHistoryData = async ({
   month: number;
   grade: string;
 }) => {
-  console.log("grade", grade);
-  const result = await db
-    .select()
-    .from(questionsMonthHistory)
-    .orderBy(asc(questionsMonthHistory.day))
-    .where(
-      and(
-        eq(questionsMonthHistory.subjectId, subjectId),
-        eq(questionsMonthHistory.userId, userId),
-        eq(questionsMonthHistory.month, month),
-        eq(questionsMonthHistory.grade, grade)
-      )
-    );
-
-  // await db.insert(questionsMonthHistory).values({
-  //   examId: "4e2d5985-eddd-4454-90f0-65f19c2db747",
-  //   studentId: "afe02058-8d03-4813-a5b3-ee202806952f",
-  //   subjectId: "4edd48eb-1e17-41ac-adf4-40b9b07c17a4",
-  //   marks: 62.5,
-  //   day: 30,
-  //   month: 11,
-  //   year: 2024,
-  // });
+  const result = await db.query.questionsMonthHistory.findMany({
+    with: {
+      subjects: true,
+    },
+    where: and(
+      eq(questionsMonthHistory.subjectId, subjectId),
+      eq(questionsMonthHistory.userId, userId),
+      eq(questionsMonthHistory.month, month),
+      eq(questionsMonthHistory.grade, grade)
+    ),
+    orderBy: asc(questionsMonthHistory.day),
+  });
 
   if (!_.isEmpty(result)) {
     const history: HistoryData[] = [];
@@ -53,9 +95,11 @@ export const getMonthHistoryData = async ({
 
     for (let i = 1; i <= daysInMonth; i++) {
       let marks = 0;
+      let subjectId = "";
       const day = result.find((item) => item.day === i);
       if (day) {
         marks = day.marks || 0;
+        subjectId = day.subjects?.id as string;
       }
 
       history.push({
@@ -63,10 +107,10 @@ export const getMonthHistoryData = async ({
         year,
         month,
         day: i,
+        subjectId,
       });
     }
 
-    // const marksTest = history.find((item) => item.day === 29) as HistoryData;
     return history;
   }
 
@@ -100,7 +144,7 @@ export const getYearHistoryData = async ({
   if (!_.isEmpty(result)) {
     const historyData: HistoryData[] = [];
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 1; i <= 12; i++) {
       let marks = 0;
 
       const month = result.find((item) => item.month === i);
@@ -112,8 +156,10 @@ export const getYearHistoryData = async ({
         year,
         month: i,
         marks,
+        subjectId,
       });
     }
+
     return historyData;
   }
   return [];

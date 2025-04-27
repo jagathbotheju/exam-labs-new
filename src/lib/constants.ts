@@ -45,6 +45,35 @@ export const answersMcq = [
   { label: "Option 4", value: "option4" },
 ];
 
+export const lineColors = [
+  "#00008b",
+  "#228b22",
+  "#ff8c00",
+  "#8b008b",
+  "#ff1493",
+  "#00bfff",
+  "#ff4500",
+  "#2e8b57",
+  "#8b0000",
+  "#9400d3",
+  "#9acd32",
+];
+
+export const yearLabels = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
+
 export const monthHistoryDataTest = [
   {
     day: 1,

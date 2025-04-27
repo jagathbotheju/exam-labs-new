@@ -430,7 +430,7 @@ export const completeExamAction = async ({
           subjectId,
           grade,
           marks,
-          month: date.getUTCMonth(),
+          month: date.getUTCMonth() + 1,
           year: date.getUTCFullYear(),
         })
         .returning();

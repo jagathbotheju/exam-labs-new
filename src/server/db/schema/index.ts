@@ -19,4 +19,7 @@ export {
 export { userExams, userExamRelations } from "@/server/db/schema/userExams";
 export { users, userRelations } from "@/server/db/schema/users";
 export { questionsYearHistory } from "@/server/db/schema/questionsYearHistory";
-export { questionsMonthHistory } from "@/server/db/schema/questionsMonthHistory";
+export {
+  questionsMonthHistory,
+  questionsMonthHistoryRelations,
+} from "@/server/db/schema/questionsMonthHistory";

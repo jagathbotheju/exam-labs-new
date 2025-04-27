@@ -16,4 +16,20 @@ type HistoryData = {
   year: number;
   month: number;
   day?: number;
+  subjectId: string;
+};
+
+type ChartData = {
+  year: number;
+  month: number;
+  day?: number;
+  // subject: string;
+};
+
+type MonthHistoryData = {
+  marks: number;
+  year: number;
+  month: number;
+  day?: number;
+  subject: string;
 };

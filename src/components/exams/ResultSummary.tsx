@@ -44,6 +44,8 @@ const ResultSummary = ({ user }: Props) => {
       year: period.year,
       grade: user.grade as string,
     });
+  console.log("monthHistoryData", monthHistoryData);
+
   const { data: yearHistoryData, isLoading: yearHistoryFetching } =
     useYearHistoryData({
       subjectId,

@@ -55,7 +55,9 @@ const AddMcqQuestion = ({ questionId }: Props) => {
     mode: "all",
   });
 
-  const { data: question } = useQuestionById(questionId as string);
+  const { data: question, isLoading: questionLoading } = useQuestionById(
+    questionId as string
+  );
 
   useEffect(() => {
     form.reset();
@@ -95,209 +97,215 @@ const AddMcqQuestion = ({ questionId }: Props) => {
 
   return (
     <div className="mt-2 w-full flex flex-col gap-4 dark:bg-slate-900 bg-slate-50">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex gap-5">
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-5 items-center w-full">
-                {/* grade */}
-                <FormField
-                  control={form.control}
-                  name="grade"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Grade</FormLabel>
-                      <GradePicker
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {questionLoading ? (
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-10 h-10 animate-spin" />
+        </div>
+      ) : (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="flex gap-5">
+              <div className="flex flex-col gap-5">
+                <div className="flex gap-5 items-center w-full">
+                  {/* grade */}
+                  <FormField
+                    control={form.control}
+                    name="grade"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Grade</FormLabel>
+                        <GradePicker
+                          value={field.value}
+                          onChange={(value) => field.onChange(value)}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* term */}
-                <FormField
-                  control={form.control}
-                  name="term"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Term</FormLabel>
-                      <TermPicker
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  {/* term */}
+                  <FormField
+                    control={form.control}
+                    name="term"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Term</FormLabel>
+                        <TermPicker
+                          value={field.value}
+                          onChange={(value) => field.onChange(value)}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* subject */}
+                  {/* subject */}
+                  <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Subject</FormLabel>
+                        <SubjectPicker
+                          value={field.value}
+                          onChange={(value) => field.onChange(value)}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* question body */}
                 <FormField
                   control={form.control}
-                  name="subject"
+                  name="body"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Subject</FormLabel>
-                      <SubjectPicker
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Question Text</FormLabel>
+                      <FormControl>
+                        <div className="w-full h-full">
+                          <TipTap value={field.value} />
+                        </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
 
-              {/* question body */}
+              {/* image */}
               <FormField
                 control={form.control}
-                name="body"
+                name="image"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel>Question Text</FormLabel>
+                  <FormItem>
                     <FormControl>
-                      <div className="w-full h-full">
-                        <TipTap value={field.value} />
-                      </div>
+                      <ImageUpload
+                        value={field.value}
+                        onChange={(url) => field.onChange(url)}
+                        setFiles={setFiles}
+                      />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            {/* image */}
+            <div className="flex justify-between gap-5"></div>
+
+            {/* option-1 */}
             <FormField
               control={form.control}
-              name="image"
+              name="option1"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Option 1</FormLabel>
                   <FormControl>
-                    <ImageUpload
-                      value={field.value}
-                      onChange={(url) => field.onChange(url)}
-                      setFiles={setFiles}
+                    <Textarea
+                      {...field}
+                      className="tracking-wide font-sinhala text-lg!"
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          <div className="flex justify-between gap-5"></div>
+            {/* option-2 */}
+            <FormField
+              control={form.control}
+              name="option2"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Option 2</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="tracking-wide font-sinhala text-lg!"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* option-1 */}
-          <FormField
-            control={form.control}
-            name="option1"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Option 1</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="tracking-wide font-sinhala text-lg!"
+            {/* option-3 */}
+            <FormField
+              control={form.control}
+              name="option3"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Option 3</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="tracking-wide font-sinhala text-lg!"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* option-4 */}
+            <FormField
+              control={form.control}
+              name="option4"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Option 4</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="tracking-wide font-sinhala text-lg!"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* answer */}
+            <FormField
+              control={form.control}
+              name="answer"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Answer</FormLabel>
+                  <AnswerPicker
+                    value={field.value}
+                    onChange={(value) => field.onChange(value)}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* option-2 */}
-          <FormField
-            control={form.control}
-            name="option2"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Option 2</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="tracking-wide font-sinhala text-lg!"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* option-3 */}
-          <FormField
-            control={form.control}
-            name="option3"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Option 3</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="tracking-wide font-sinhala text-lg!"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* option-4 */}
-          <FormField
-            control={form.control}
-            name="option4"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Option 4</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="tracking-wide font-sinhala text-lg!"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* answer */}
-          <FormField
-            control={form.control}
-            name="answer"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Answer</FormLabel>
-                <AnswerPicker
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="mt-8 flex gap-2">
-            <Button type="submit">
-              {questionId ? "Update" : isPending ? "Creating..." : "Create"}
-              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-            </Button>
-            <Button
-              className="dark:bg-slate-900"
-              onClick={() => {
-                router.push(
-                  `/admin/questions?subjectId=${form.getValues(
-                    "subject"
-                  )}&grade=${form.getValues("grade")}`
-                );
-                form.reset();
-              }}
-              type="button"
-              variant="outline"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Form>
+            <div className="mt-8 flex gap-2">
+              <Button type="submit">
+                {questionId ? "Update" : isPending ? "Creating..." : "Create"}
+                {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+              </Button>
+              <Button
+                className="dark:bg-slate-900"
+                onClick={() => {
+                  router.push(
+                    `/admin/questions?subjectId=${form.getValues(
+                      "subject"
+                    )}&grade=${form.getValues("grade")}`
+                  );
+                  form.reset();
+                }}
+                type="button"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
     </div>
   );
 };

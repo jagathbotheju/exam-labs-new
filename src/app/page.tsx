@@ -1,5 +1,5 @@
 import MyExams from "@/components/exams/MyExams";
-import ResultSummary from "@/components/exams/ResultSummary";
+import ResultSummaryLineChart from "@/components/exams/ResultSummaryLineChart";
 import { auth } from "@/lib/auth";
 import { User } from "@/server/db/schema/users";
 import { redirect } from "next/navigation";
@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-8">
-        <ResultSummary user={user} />
+        <ResultSummaryLineChart user={user} />
         <MyExams user={user} />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   doublePrecision,
   integer,
@@ -46,6 +46,25 @@ export const questionsMonthHistory = pgTable(
   ]
 );
 
+export const questionsMonthHistoryRelations = relations(
+  questionsMonthHistory,
+  ({ one }) => ({
+    subjects: one(subjects, {
+      fields: [questionsMonthHistory.subjectId],
+      references: [subjects.id],
+    }),
+  })
+);
+
 export type QuestionsMonthHistory = InferSelectModel<
   typeof questionsMonthHistory
 >;
+
+export type QuestionsMonthHistoryExt = InferSelectModel<
+  typeof questionsMonthHistory
+> & {
+  subjects: {
+    id: string;
+    name: string;
+  };
+};
