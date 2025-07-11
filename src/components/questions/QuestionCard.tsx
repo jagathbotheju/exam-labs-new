@@ -41,9 +41,17 @@ interface Props {
   subjectId: string;
   userId?: string;
   grade: string;
+  term: string;
 }
 
-const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
+const QuestionCard = ({
+  question,
+  index,
+  subjectId,
+  userId,
+  grade,
+  term,
+}: Props) => {
   const router = useRouter();
   const [exam, setExam] = useState<ExamExt | undefined>();
   const [questionExams, setQuestionExams] = useState<ExamExt[] | undefined>();
@@ -89,6 +97,10 @@ const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
                 {user.name}
               </Badge>
             )}
+
+            <Badge variant="outline" className="border border-primary">
+              {grade}/{term}
+            </Badge>
           </div>
 
           <div className="flex justify-between h-full">
@@ -149,6 +161,9 @@ const QuestionCard = ({ question, index, subjectId, userId, grade }: Props) => {
                         grade={grade}
                       />
                     </AlertDialogTitle>
+                    <AlertDialogDescription className="hidden">
+                      add question to exam
+                    </AlertDialogDescription>
 
                     <div className="py-1 flex flex-col">
                       <span className="text-sm font-sinhala">

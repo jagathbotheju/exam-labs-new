@@ -4,6 +4,7 @@ import { InferSelectModel, relations } from "drizzle-orm";
 import { QuestionExt, questions } from "./questions";
 import { User, users } from "./users";
 import { ExamQuestion } from "./examQuestions";
+import { subjects } from "./subjects";
 
 export const incorrectQuestions = pgTable(
   "incorrect_questions",
@@ -14,6 +15,8 @@ export const incorrectQuestions = pgTable(
     examId: text("exam_id")
       .references(() => exams.id)
       .notNull(),
+    subjectId: text("subject_id").references(() => subjects.id),
+    grade: text("grade"),
     questionId: text("question_id")
       .references(() => questions.id)
       .notNull(),

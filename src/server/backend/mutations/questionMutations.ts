@@ -104,12 +104,16 @@ export const useAnswerQuestion = () => {
       questionId,
       userAnswer,
       questionAnswer,
+      subjectId,
+      grade,
     }: {
       examId: string;
       userId: string;
       questionId: string;
       userAnswer: string;
       questionAnswer: string;
+      subjectId: string;
+      grade: string;
     }) =>
       answerQuestion({
         questionId,
@@ -117,6 +121,8 @@ export const useAnswerQuestion = () => {
         userId,
         userAnswer,
         questionAnswer,
+        subjectId,
+        grade,
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["user-answers"] });

@@ -115,7 +115,6 @@ const UserExam = ({ examId, completed = false }: Props) => {
         ...userResponse,
         {
           questionId,
-          // questionTypeId,
           userAnswer,
           questionAnswer,
         },
@@ -126,10 +125,10 @@ const UserExam = ({ examId, completed = false }: Props) => {
       examId,
       userId: userId,
       questionId,
-      // questionTypeId,
       userAnswer,
       questionAnswer,
-      // subjectId: exam?.subjectId ?? "",
+      subjectId: exam?.subjectId ?? "",
+      grade: exam?.grade ?? "",
     });
   };
 

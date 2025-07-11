@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getExamQuestions,
   getIncorrectQuestions,
+  getIncorrectQuestionsCount,
   getQuestionById,
   getQuestions,
   getQuestionsBySubject,
@@ -26,6 +27,22 @@ export const useQuestionsCount = ({
   return useQuery({
     queryKey: ["questions-count"],
     queryFn: () => getQuestionsCount({ grade, subjectId }),
+  });
+};
+
+export const useIncorrectQuestionsCount = ({
+  grade,
+  userId,
+  subjectId,
+}: {
+  grade: string;
+  subjectId: string;
+  userId: string;
+}) => {
+  return useQuery({
+    queryKey: ["questions-count"],
+    queryFn: () => getIncorrectQuestionsCount({ grade, subjectId, userId }),
+    enabled: !!grade && !!subjectId && !!userId,
   });
 };
 
@@ -70,12 +87,17 @@ export const useExamQuestions = () => {
 export const useIncorrectQuestions = ({
   userId,
   subjectId,
+  page,
+  grade,
 }: {
   userId?: string;
   subjectId?: string;
+  page: number;
+  grade: string;
 }) => {
   return useQuery({
-    queryKey: ["incorrect-questions"],
-    queryFn: () => getIncorrectQuestions({ userId, subjectId }),
+    queryKey: ["incorrect-questions", userId, subjectId, page, grade],
+    queryFn: () => getIncorrectQuestions({ userId, subjectId, page, grade }),
+    enabled: !!userId && !!subjectId && !!page && !!grade,
   });
 };

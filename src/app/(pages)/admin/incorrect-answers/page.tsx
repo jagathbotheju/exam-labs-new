@@ -1,3 +1,4 @@
+import IncorrectQuestions from "@/components/questions/IncorrectQuestions";
 import { auth } from "@/lib/auth";
 import { User } from "@/server/db/schema/users";
 import { Metadata } from "next";
@@ -19,8 +20,7 @@ const IncorrectQuestionsPage = async () => {
 
   return (
     <div className="flex flex-col border rounded-md dark:border-primary/40 h-full p-4 w-full">
-      {/* <IncorrectQuestions /> */}
-      Incorrect Answers
+      <IncorrectQuestions />
     </div>
   );
 };

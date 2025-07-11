@@ -97,6 +97,7 @@ const AllQuestions = () => {
                   index={index}
                   subjectId={subjectId}
                   grade={grade}
+                  term={question.term}
                 />
               );
             })}

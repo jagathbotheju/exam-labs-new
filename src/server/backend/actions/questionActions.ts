@@ -3,7 +3,10 @@ import { auth } from "@/lib/auth";
 import { AddMcqQuestionSchema } from "@/lib/schema";
 import { db } from "@/server/db";
 import { examQuestions, incorrectQuestions } from "@/server/db/schema";
-import { IncorrectQuestion } from "@/server/db/schema/incorrectQuestions";
+import {
+  IncorrectQuestion,
+  IncorrectQuestionExt,
+} from "@/server/db/schema/incorrectQuestions";
 import { Question, QuestionExt, questions } from "@/server/db/schema/questions";
 import { userAnswers } from "@/server/db/schema/userAnswers";
 import { User } from "@/server/db/schema/users";
@@ -160,12 +163,16 @@ export const answerQuestion = async ({
   questionId,
   userAnswer,
   questionAnswer,
+  subjectId,
+  grade,
 }: {
   examId: string;
   userId: string;
   questionId: string;
   userAnswer: string;
   questionAnswer: string;
+  subjectId: string;
+  grade: string;
 }) => {
   const answer = await db
     .insert(userAnswers)
@@ -213,6 +220,8 @@ export const answerQuestion = async ({
         userId,
         examId,
         questionId,
+        subjectId,
+        grade,
       })
       .returning();
   }
@@ -242,6 +251,28 @@ export const getQuestionsCount = async ({
     .select({ count: count() })
     .from(questions)
     .where(and(eq(questions.subjectId, subjectId), eq(questions.grade, grade)));
+  return questionsCount[0];
+};
+
+export const getIncorrectQuestionsCount = async ({
+  subjectId,
+  userId,
+  grade,
+}: {
+  subjectId: string;
+  userId: string;
+  grade: string;
+}) => {
+  const questionsCount = await db
+    .select({ count: count() })
+    .from(incorrectQuestions)
+    .where(
+      and(
+        eq(incorrectQuestions.subjectId, subjectId),
+        eq(incorrectQuestions.grade, grade),
+        eq(incorrectQuestions.userId, userId)
+      )
+    );
   return questionsCount[0];
 };
 
@@ -280,7 +311,7 @@ export const getQuestionsBySubjectPagination = async ({
       subjects: true,
     },
 
-    orderBy: asc(questions.createdAt),
+    orderBy: desc(questions.createdAt),
     limit: pageSize,
     offset: (page - 1) * pageSize,
   });
@@ -309,24 +340,40 @@ export const getExamQuestions = async () => {
 export const getIncorrectQuestions = async ({
   userId,
   subjectId,
+  page,
+  pageSize = 10,
+  grade,
 }: {
   userId?: string;
   subjectId?: string;
+  page: number;
+  pageSize?: number;
+  grade: string;
 }) => {
   if (!userId || !subjectId) return [];
-  const incorrect = await db.query.incorrectQuestions.findMany({
-    with: {
-      questions: true,
-    },
-  });
-  if (!_.isEmpty(incorrect)) {
-    const questionsBySubject = incorrect.map((item) => {
-      if (item.questions?.subjectId === subjectId) {
-        return item.questions;
-      }
-    });
-    return questionsBySubject as QuestionExt[];
-  }
 
-  return [];
+  const questions = await db.query.incorrectQuestions.findMany({
+    where: and(
+      eq(incorrectQuestions.userId, userId),
+      eq(incorrectQuestions.subjectId, subjectId),
+      eq(incorrectQuestions.grade, grade)
+    ),
+    with: {
+      questions: {
+        with: {
+          subjects: true,
+
+          examQuestions: {
+            with: {
+              exams: true,
+            },
+          },
+        },
+      },
+    },
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+  });
+
+  return questions as IncorrectQuestionExt[];
 };
